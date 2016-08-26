@@ -6,3 +6,4 @@ By Ic3Venom
     resources used were the MSDN library from Microsoft to help with inter sizes
     and pointers.
 - 26 August 2016: merged the other 2 repositories of the different versions of baseconversion and made them branches in this one.
+- Trying to find a way to do convert into larger bases with numbers that are close to max size of uint64_t
