@@ -1,5 +1,8 @@
-# baseconversion0
-Converts base 10 into choice base 2-10... slowly
-
-It works using basic number adding principles, by adding 1 to the one's place until it overflows into the next column, and so on.
-- As a result of adding ones and wiping columns into the next one, this process is very slow and recourse intensive, and it is not reccomended to convert large numbers with this program, baseconversion 1 and 2 will be much faster
+# baseconversion v0.1
+By Ic3Venom
+Purpose: To convert any base 10 number in range of 1 to 18446744073709551615
+    into bases 2-16, using numeric values 0-F.
+Note: I did not see any other programs of conversion and I challenged myself to
+    convert numbers without using things like '0b', '0x', or 'o'. The only
+    resources used were the MSDN library from Microsoft to help with int sizes
+    and their pointers.
