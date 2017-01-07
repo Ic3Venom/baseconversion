@@ -1,4 +1,4 @@
-# baseconversion "completed" v1.0
+# baseconverter
 By Ic3Venom
 - Purpose: To convert base 2-16 into base 2-16, using numeric values 0-F.
 - Note: I did not see any other programs of conversion and I challenged myself to
