@@ -1,16 +1,14 @@
 #include <iostream>
 #include <string>
 
-#define MAX_RANGE 18446744073709551615
-
 //Purpose: to convert numbers in base-(2->16) into number base-(2->16)
 //Created by Julian Meyn August 23, 2016; REMASTERED(again) January 5, 2017
 
-uint64_t    convertDecimal (std::string num , short baseOld );
+uint64_t    convertDecimal (std::string num,  short baseOld);
+std::string convertBase    (uint64_t    num,  short baseNew);
 void        baseInRange    (short       base);
-std::string convertBase    (uint64_t    num , short baseNew );
+int         stringToInt    (char        chr);
 uint64_t    exponentiate   (short       base, short exponent);
-int         stringToInt    (char        chr );
 
 int main()
 {
@@ -33,22 +31,22 @@ int main()
     pNumInt = &numInt;
     convertBase(*pNumInt, baseNew);
 
-    return 1;
+    return 0;
 }
 
 //converts bases 2-16 into base 10 for easier conversion later
 uint64_t convertDecimal(std::string num, short baseOld)
 {
-    uint64_t    numInt      {0};
-    short       indexInt    {0};
-    std::string numberRange {"0123456789ABCDEF"};
+    uint64_t    numInt   {0};
+    short       indexInt {0};
+    std::string numRange {"0123456789ABCDEF"};
 
     for (short i{0}; i < num.length(); i++)
     {
         //Checks if 'oldNum' contains numbers that are in its base capacity
         for(short j{baseOld}; j < 0; j--)
         {
-            if (num[i] == numberRange[j])
+            if (num[i] == numRange[j])
             {
                 std::cout << "Unknown value '" << num[i] << "' in base " << baseOld << ". Exiting program..." << std::endl;
                 exit(1);
@@ -67,61 +65,65 @@ uint64_t convertDecimal(std::string num, short baseOld)
 //Converts number from convertDecimal into base-(2->16)
 std::string convertBase(uint64_t num, short baseNew)
 {
+    uint64_t    numMax, numMin;
     std::string numNew;
-    std::string numSave;
+    std::string numRange {"0123456789ABCDEF"};
 
-    std::cout << num;
-    for(short i = 0;; i++)
+    std::cout << num << std::endl;
+
+
+    for(short i{0}; num; i++)
     {
-        exit(0);
-    }
-}
+        numMax = exponentiate(baseNew, i);
+        numMin = exponentiate(baseNew, i - 1);
 
-/*//Terrible function main, but it is the most important conversion
-std::string conversion(uint64_t *pNum, short newBase)
-{
-    std::string newNum;
-    std::string newNumSave;
-
-    //Column can be described using examples: column[0] of 123 is 3, column[1] of 5791 is 9
-    for(short column= 0; *pNum > 0; column++)
-    {
-        //Max range of *pNum
-        uint64_t maxRange= exponentiate(newBase, column +1);
-        //Min range of *pNum
-        uint64_t minRange= exponentiate(newBase, column);
-
-        if (minRange >= maxRange)
+        if (numMax > num)
         {
-            maxRange= MAX_RANGE;
-            column-=  1;
-        }
-        if (maxRange >= *pNum)
-        {
-            //Loops to see how many times minRange can go into *pNum column amount of times before passing maxRange
-            for(short possibleNumber= newBase -1; possibleNumber >= 0; possibleNumber--)
+            for(short j{0}; j <= baseNew; j++)
             {
-                if ((minRange * possibleNumber) <= *pNum)
-                {
-                    std::string numbers= "0123456789ABCDEF";
-                    //Puts correct number into correct column
-                    newNum[column]= numbers[possibleNumber];
-                    *pNum-= (minRange * possibleNumber);
-                    column= -1;
+                numMax = numMin * j;
 
-                    break;
+                if (numMax >= num)
+                {
+                    num -=(numMin * (j - 1));
+                    numNew[i] = numRange[j - 1];
+                    i = 0;
                 }
             }
         }
-        //Column is given '0' because it will not hold anything or anything yet
-        else
+        else if (numMax == num)
         {
-            newNum[column]= '0';
+            num -= numMax;
+            numNew[i - 1] = numRange[1];
+            i = 0;
         }
     }
-    std::cout << newNum;
-    return static_cast<std::string>(newNum);
-}*/
+    /*
+        Thought process in making this function
+        68
+        > 2^0: 1   0
+        > 2^1: 2   1
+        > 2^2: 4   2
+        > 2^3: 8   4
+        > 2^4: 16  8
+        > 2^5: 32  16
+        > 2^6: 64  32
+        > 2^7: 128 64
+        >> 64 * 1  = 64 , < 68
+        >> 64 * 2  = 128, > 68
+        >> 68 - 64 = 4
+        >> num[7 - 1] = '1'
+        4
+        > 2^1: 2   1
+        > 2^2: 4   2
+        > 2^3: 8   4
+        >> 2  * 1  = 2  , < 4
+        >> 2  * 2  = 2  , > 4
+        >> 4  - 4  = 0
+        >> num[2 - 1] = '1'
+        1000010
+    */
+}
 
 //Checks if number given is within 2 and 16
 void baseInRange(short base)
@@ -133,11 +135,9 @@ void baseInRange(short base)
     }
 }
 
-//From another program of mine, 'ultamitetypingtest'...
+//Converts char values into their actual int values, from 'ultimatypingtest.c'
 int stringToInt(char chr)
 {
-    //This was the only way that I could think of myself, StackOverflow said to use\
-    //vectors, which seems over-complicated for such a simple task
     switch (chr)
     {
     case 49: return 1;
@@ -161,8 +161,7 @@ int stringToInt(char chr)
     }
 }
 
-//Basic exponent function, use of cmath for only 1 function was not ideal
-//Also exponentiate is the correct term of the process of bringing x to the power of y
+//Basic exponent function
 uint64_t exponentiate(short base, short exponent)
 {
     uint64_t power{1};
