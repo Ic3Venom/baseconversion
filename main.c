@@ -39,14 +39,14 @@ uint64_t convertDecimal(std::string num, short baseOld)
 {
     uint64_t    numInt   {0};
     short       indexInt {0};
-    std::string numRange {"0123456789ABCDEF"};
+    std::string numRng   {"0123456789ABCDEF"};
 
     for (short i{0}; i < num.length(); i++)
     {
         //Checks if 'oldNum' contains numbers that are in its base capacity
         for(short j{baseOld}; j < 0; j--)
         {
-            if (num[i] == numRange[j])
+            if (num[i] == numRng[j])
             {
                 std::cout << "Unknown value '" << num[i] << "' in base " << baseOld << ". Exiting program..." << std::endl;
                 exit(1);
@@ -66,12 +66,12 @@ uint64_t convertDecimal(std::string num, short baseOld)
 std::string convertBase(uint64_t num, short baseNew)
 {
     uint64_t    numMax, numMin;
-    std::string numNew;
-    std::string numRange {"0123456789ABCDEF"};
+    //Probably going to use a C-style char array for this instead
+    std::string numNew{"0000000000000000"};
+    std::string numRng{"0123456789ABCDEF"};
+
 
     std::cout << num << std::endl;
-
-
     for(short i{0}; num; i++)
     {
         numMax = exponentiate(baseNew, i);
@@ -85,19 +85,23 @@ std::string convertBase(uint64_t num, short baseNew)
 
                 if (numMax >= num)
                 {
-                    num -=(numMin * (j - 1));
-                    numNew[i] = numRange[j - 1];
-                    i = 0;
+                    num      -= (numMin * (j - 1));
+                    numNew[i] = numRng[j - 1];
+                    i         = 0;
+
+                    break;
                 }
             }
         }
         else if (numMax == num)
         {
-            num -= numMax;
-            numNew[i - 1] = numRange[1];
-            i = 0;
+            num      -= numMax;
+            numNew[i] = numRng[1];
+            i         = 0;
         }
     }
+
+    std::cout << numNew << std::endl;
     /*
         Thought process in making this function
         68
