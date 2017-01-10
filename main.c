@@ -66,12 +66,10 @@ uint64_t convertDecimal(std::string num, short baseOld)
 std::string convertBase(uint64_t num, short baseNew)
 {
     uint64_t    numMax, numMin;
-    //Probably going to use a C-style char array for this instead
-    std::string numNew{"0000000000000000"};
-    std::string numRng{"0123456789ABCDEF"};
+    short       numLength {0};
+    std::string numNew    (64, '0');
+    std::string numRng    {"0123456789ABCDEF"};
 
-
-    std::cout << num << std::endl;
     for(short i{0}; num; i++)
     {
         numMax = exponentiate(baseNew, i);
@@ -79,29 +77,34 @@ std::string convertBase(uint64_t num, short baseNew)
 
         if (numMax > num)
         {
+            //Length of newNum stored using this
+            if (numLength == 0)
+            {
+                numLength = i;
+            }
+
             for(short j{0}; j <= baseNew; j++)
             {
                 numMax = numMin * j;
 
-                if (numMax >= num)
+                if (numMax > num)
                 {
-                    num      -= (numMin * (j - 1));
-                    numNew[i] = numRng[j - 1];
-                    i         = 0;
+                    num          -= numMin * (j - 1);
+                    numNew[i - 1] = numRng[j - 1];
+                    i             = 0;
 
                     break;
                 }
             }
         }
-        else if (numMax == num)
-        {
-            num      -= numMax;
-            numNew[i] = numRng[1];
-            i         = 0;
-        }
+    }
+    
+    std::cout << "Converted Number:\n ";
+    for(;numLength > 0; numLength--)
+    {
+        std::cout << numNew[numLength - 1];
     }
 
-    std::cout << numNew << std::endl;
     /*
         Thought process in making this function
         68
