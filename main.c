@@ -4,11 +4,12 @@
 //Purpose: to convert numbers in base-(2->16) into number base-(2->16)
 //Created by Julian Meyn August 23, 2016; REMASTERED(again) January 5, 2017
 
-uint64_t    convertDecimal (std::string num,  short baseOld);
-std::string convertBase    (uint64_t    num,  short baseNew);
+uint64_t    convertDecimal (std::string num,       short baseOld);
+std::string convertBase    (uint64_t    num,       short baseNew);
 void        baseInRange    (short       base);
 int         stringToInt    (char        chr);
-uint64_t    exponentiate   (short       base, short exponent);
+void        sizeMax        (short       &numLength, short i);
+uint64_t    exponentiate   (short       base,      short exponent);
 
 int main()
 {
@@ -65,8 +66,8 @@ uint64_t convertDecimal(std::string num, short baseOld)
 //Converts number from convertDecimal into base-(2->16)
 std::string convertBase(uint64_t num, short baseNew)
 {
-    uint64_t    numMax, numMin;
-    short       numLength {0};
+    uint64_t    numMax, numMin, numSave;
+    short       numSize   {0};
     std::string numNew    (64, '0');
     std::string numRng    {"0123456789ABCDEF"};
 
@@ -75,13 +76,20 @@ std::string convertBase(uint64_t num, short baseNew)
         numMax = exponentiate(baseNew, i);
         numMin = exponentiate(baseNew, i - 1);
 
+        //Checks for 'i != 0' because numMin >= numMax @i = 0(1 >= 1)
+        if (numMin >= numMax && i != 0)
+        {
+            sizeMax(numSize, i);
+
+            num          -= numMin;
+            numNew[i - 1] = numRng[1];
+            i             = 0;
+        }
+
         if (numMax > num)
         {
             //Length of newNum stored using this
-            if (numLength == 0)
-            {
-                numLength = i;
-            }
+            sizeMax(numSize, i);
 
             for(short j{0}; j <= baseNew; j++)
             {
@@ -98,24 +106,24 @@ std::string convertBase(uint64_t num, short baseNew)
             }
         }
     }
-    
+
     std::cout << "Converted Number:\n ";
-    for(;numLength > 0; numLength--)
+    for(;numSize > 0; numSize--)
     {
-        std::cout << numNew[numLength - 1];
+        std::cout << numNew[numSize - 1];
     }
 
     /*
-        Thought process in making this function
+        Thought process in making the conversion algorithm ...Thought process in making the number overflow problem
         68
-        > 2^0: 1   0
-        > 2^1: 2   1
+        > 2^0: 1   0                                       ...>  numMax(i = 18): 10 000 000 000 000 000 000
+        > 2^1: 2   1                                          >  numMin(i = 18):  1 000 000 000 000 000 000
         > 2^2: 4   2
-        > 2^3: 8   4
-        > 2^4: 16  8
-        > 2^5: 32  16
-        > 2^6: 64  32
-        > 2^7: 128 64
+        > 2^3: 8   4                                       ...>> numMax(i = 19):  7 766 279 631 452 241 920
+        > 2^4: 16  8                                          >> numMin(i = 19): 10 000 000 000 000 000 000
+        > 2^5: 32  16                                      ...>>>num          -= numMin
+        > 2^6: 64  32                                         >>>numNew[i - 1] = numRng[1]
+        > 2^7: 128 64                                         >>>i             = 0
         >> 64 * 1  = 64 , < 68
         >> 64 * 2  = 128, > 68
         >> 68 - 64 = 4
@@ -168,6 +176,15 @@ int stringToInt(char chr)
     }
 }
 
+//Determines the max length of num
+void sizeMax(short &numSize, short i)
+{
+    if (numSize == 0)
+    {
+        numSize = i;
+    }
+}
+
 //Basic exponent function
 uint64_t exponentiate(short base, short exponent)
 {
@@ -182,5 +199,6 @@ uint64_t exponentiate(short base, short exponent)
     {
         power *= base;
     }
+
     return power;
 }
