@@ -2,14 +2,14 @@
 #include <string>
 
 //Purpose: to convert numbers in base-(2->16) into number base-(2->16)
-//Created by Julian Meyn August 23, 2016; REMASTERED(again) January 5, 2017
+//Created by Julian Meyn 23.8.2016, Finished 10.1.2017
 
-uint64_t    convertDecimal (std::string num,       short baseOld);
-std::string convertBase    (uint64_t    num,       short baseNew);
+uint64_t    convertDecimal (std::string num,        short baseOld);
+std::string convertBase    (uint64_t    num,        short baseNew);
 void        baseInRange    (short       base);
 int         stringToInt    (char        chr);
 void        sizeMax        (short       &numLength, short i);
-uint64_t    exponentiate   (short       base,      short exponent);
+uint64_t    exponentiate   (short       base,       short exponent);
 
 int main()
 {
@@ -112,32 +112,6 @@ std::string convertBase(uint64_t num, short baseNew)
     {
         std::cout << numNew[numSize - 1];
     }
-
-    /*
-        Thought process in making the conversion algorithm ...Thought process in making the number overflow problem
-        68
-        > 2^0: 1   0                                       ...>  numMax(i = 18): 10 000 000 000 000 000 000
-        > 2^1: 2   1                                          >  numMin(i = 18):  1 000 000 000 000 000 000
-        > 2^2: 4   2
-        > 2^3: 8   4                                       ...>> numMax(i = 19):  7 766 279 631 452 241 920
-        > 2^4: 16  8                                          >> numMin(i = 19): 10 000 000 000 000 000 000
-        > 2^5: 32  16                                      ...>>>num          -= numMin
-        > 2^6: 64  32                                         >>>numNew[i - 1] = numRng[1]
-        > 2^7: 128 64                                         >>>i             = 0
-        >> 64 * 1  = 64 , < 68
-        >> 64 * 2  = 128, > 68
-        >> 68 - 64 = 4
-        >> num[7 - 1] = '1'
-        4
-        > 2^1: 2   1
-        > 2^2: 4   2
-        > 2^3: 8   4
-        >> 2  * 1  = 2  , < 4
-        >> 2  * 2  = 2  , > 4
-        >> 4  - 4  = 0
-        >> num[2 - 1] = '1'
-        1000010
-    */
 }
 
 //Checks if number given is within 2 and 16
