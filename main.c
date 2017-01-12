@@ -49,7 +49,10 @@ uint64_t convertDecimal(std::string num, short baseOld)
         {
             if (num[i] == numRng[j])
             {
-                std::cout << "Unknown value '" << num[i] << "' in base " << baseOld << ". Exiting program..." << std::endl;
+                std::cout << "Unknown value '" << num[i];
+                std::cout << "' in base " << baseOld;
+                std::cout << ". Exiting program..." << std::endl;
+                
                 exit(1);
             }
         }
@@ -66,7 +69,7 @@ uint64_t convertDecimal(std::string num, short baseOld)
 //Converts number from convertDecimal into base-(2->16)
 std::string convertBase(uint64_t num, short baseNew)
 {
-    uint64_t    numMax, numMin, numSave;
+    uint64_t    numMax, numMin;
     short       numSize   {0};
     std::string numNew    (64, '0');
     std::string numRng    {"0123456789ABCDEF"};
