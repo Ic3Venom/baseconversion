@@ -1,38 +1,23 @@
-#include <iostream>
-#include <string>
-
 //Purpose: to convert numbers in base-(2->16) into number base-(2->16)
-//Created by Julian Meyn 23.8.2016, Finished 10.1.2017
+//Created by Julian Meyn August 23, 2016; REMASTERED(again) January 5, 2017
+/*
+    Necessary funcion/library declarations, can replace use of exponentiate function with cmath::pow()
+        #include <string>
+        #include <iostream>
 
-uint64_t    convertDecimal (std::string num,        short baseOld);
-std::string convertBase    (uint64_t    num,        short baseNew);
-void        baseInRange    (short       base);
-int         stringToInt    (char        chr);
-void        sizeMax        (short       &numLength, short i);
-uint64_t    exponentiate   (short       base,       short exponent);
-
-int main()
+        std::string numConvert     (std::string num,  short baseOld, short baseNew);
+        uint64_t    convertDecimal (std::string num,  short baseOld);
+        std::string convertString  (uint64_t    num,  short baseNew);
+        int         stringToInt    (char        chr);
+        uint64_t    exponentiate   (short       base, short exponent);
+*/
+std::string numConvert(std::string num, short baseOld, short baseNew)
 {
-    uint64_t 	numInt ,*pNumInt;
-    short 		baseOld, baseNew;
-    std::string numStr;
+    uint64_t numInt = convertDecimal(num, baseOld);
+    num = convertString(numInt, baseNew);
 
-    std::cout << "First base:\n$ ";
-    std::cin >> baseOld;
-    baseInRange(baseOld);
 
-    std::cout << "First number:\n$ ";
-    std::cin >> numStr;
-    numInt = convertDecimal(numStr, baseOld);
-
-    std::cout << "New base:\n$ ";
-    std::cin >> baseNew;
-    baseInRange(baseNew);
-
-    pNumInt = &numInt;
-    convertBase(*pNumInt, baseNew);
-
-    return 0;
+    return num;
 }
 
 //converts bases 2-16 into base 10 for easier conversion later
@@ -49,7 +34,10 @@ uint64_t convertDecimal(std::string num, short baseOld)
         {
             if (num[i] == numRng[j])
             {
-                std::cout << "Unknown value '" << num[i] << "' in base " << baseOld << ". Exiting program..." << std::endl;
+                std::cout << "Unknown value '" << num[i]
+                          << "' in base " << baseOld
+                          << ". Exiting program..."
+                          << std::endl;
                 exit(1);
             }
         }
@@ -64,9 +52,9 @@ uint64_t convertDecimal(std::string num, short baseOld)
 }
 
 //Converts number from convertDecimal into base-(2->16)
-std::string convertBase(uint64_t num, short baseNew)
+std::string convertString(uint64_t num, short baseNew)
 {
-    uint64_t    numMax, numMin, numSave;
+    uint64_t    numMax, numMin;
     short       numSize   {0};
     std::string numNew    (64, '0');
     std::string numRng    {"0123456789ABCDEF"};
@@ -79,7 +67,10 @@ std::string convertBase(uint64_t num, short baseNew)
         //Checks for 'i != 0' because numMin >= numMax @i = 0(1 >= 1)
         if (numMin >= numMax && i != 0)
         {
-            sizeMax(numSize, i);
+            if (numSize == 0)
+            {
+                numSize = i;
+            }
 
             num          -= numMin;
             numNew[i - 1] = numRng[1];
@@ -89,7 +80,10 @@ std::string convertBase(uint64_t num, short baseNew)
         if (numMax > num)
         {
             //Length of newNum stored using this
-            sizeMax(numSize, i);
+            if (numSize == 0)
+            {
+                numSize = i;
+            }
 
             for(short j{0}; j <= baseNew; j++)
             {
@@ -107,21 +101,14 @@ std::string convertBase(uint64_t num, short baseNew)
         }
     }
 
-    std::cout << "Converted Number:\n ";
-    for(;numSize > 0; numSize--)
-    {
-        std::cout << numNew[numSize - 1];
-    }
-}
+    std::string numReturn (numSize, '0');
 
-//Checks if number given is within 2 and 16
-void baseInRange(short base)
-{
-    if (base < 2 || base > 16)
+    for(short i{0}; i <= numSize; i++)
     {
-        std::cout << "Expected base case in range of 2 to 16, got " << base << ". Exiting program...";
-        exit(1);
+        numReturn[numSize - i] = numNew[i - 1];
     }
+
+    return numReturn;
 }
 
 //Converts char values into their actual int values, from 'ultimatypingtest.c'
@@ -147,15 +134,6 @@ int stringToInt(char chr)
     case 70: return 15;
     //and then back to the regularly scheduled 'program'
     default: return 0;
-    }
-}
-
-//Determines the max length of num
-void sizeMax(short &numSize, short i)
-{
-    if (numSize == 0)
-    {
-        numSize = i;
     }
 }
 
