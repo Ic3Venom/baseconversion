@@ -1,6 +1,6 @@
-# baseconverter
+# baseconverter (No Interface)
 By Ic3Venom
-- Purpose: To convert base 2-16 into base 2-16, using numeric values 0-F.
+- Purpose: To convert base 2-16 into base 2-16, using numeric values 0-F by calling a function, returning a string.
 - Note: I did not see any other programs of conversion and I challenged myself to
     convert numbers without using memory addresses and pointers. The only
     resources used were the MSDN library from Microsoft to help with int sizes
