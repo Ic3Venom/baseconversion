@@ -34,10 +34,10 @@ uint64_t convertDecimal(std::string num, short baseOld)
         {
             if (num[i] == numRng[j])
             {
-                std::cout << "Unknown value '" << num[i]
-                          << "' in base " << baseOld
-                          << ". Exiting program..."
-                          << std::endl;
+                std::cout << "Unknown value '" << num[i];
+                std::cout << "' in base " << baseOld;
+                std::cout << ". Exiting program..." << std::endl;
+                
                 exit(1);
             }
         }
