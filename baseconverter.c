@@ -1,8 +1,11 @@
+/*
+** File: baseconverter.c
+** Purpose: to convert numbers from base-(2->16) to base-(2->16)
+** Created by Julian Meyn 23.8.2016, Finished 10.1.2017
+*/
+
 #include <iostream>
 #include <string>
-
-//Purpose: to convert numbers in base-(2->16) into number base-(2->16)
-//Created by Julian Meyn 23.8.2016, Finished 10.1.2017
 
 uint64_t    convertDecimal (std::string num,        short baseOld);
 std::string convertBase    (uint64_t    num,        short baseNew);
