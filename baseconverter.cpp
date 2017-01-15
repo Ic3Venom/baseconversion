@@ -1,5 +1,5 @@
 /*
-** File: baseconverter.c
+** File: baseconverter.cpp
 ** Purpose: to convert numbers from base-(2->16) to base-(2->16)
 ** Created by Julian Meyn 23.8.2016, Finished 10.1.2017
 */
